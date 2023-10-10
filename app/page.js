@@ -119,7 +119,7 @@ export default function Home() {
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2}>
             {images.map((image, index) => (
-              <Grid item xs={4} key={index}>
+              <Grid item xs={12} key={index} sm={6} md={4}>
                 <Item>
                   <img src={image.imgSrc} alt={`Image ${index}`} />
                   <p>{image.title}</p>
