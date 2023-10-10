@@ -17,19 +17,32 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Home() {
-  const [Search, setSearch] = useState();
-  let api = `https://images-api.nasa.gov/search?q=${Search}`;
+  const [search, setSearch] = useState();
+  const [images, setImages] = useState([]);
 
   const handleSearch = (e) => {
     e.preventDefault();
 
+    const api = `https://images-api.nasa.gov/search?q=${search}`;
+
     fetch(api)
       .then((res) => res.json())
       .then((data) => {
-        const mysJonImg = data.collection.items[0].links[0].href;
-        const myJsonPara = data.collection.items[0].data[0].title
-        document.getElementById("img").src = mysJonImg;
-        document.getElementById("para").innerHTML = myJsonPara;
+        const items = data.collection.items;
+
+        if (items.length > 0) {
+          const imageArray = items.map((item) => {
+            const imgSrc = item.links && item.links[0] && item.links[0].href;
+            const title = item.data && item.data[0] && item.data[0].title;
+            return {
+              imgSrc: imgSrc || "",
+              title: title || "",
+            };
+          });
+          setImages(imageArray);
+        } else {
+          setImages([]);
+        }
       })
       .catch((err) => {
         console.error("the error is ", err);
@@ -105,12 +118,14 @@ export default function Home() {
         <h1 id="demo2"></h1>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2}>
-            <Grid item xs={4}>
-              <Item>
-                <img id="img" src=""></img>
-                <p id="para"></p>
-              </Item>
-            </Grid>
+            {images.map((image, index) => (
+              <Grid item xs={4} key={index}>
+                <Item>
+                  <img src={image.imgSrc} alt={`Image ${index}`} />
+                  <p>{image.title}</p>
+                </Item>
+              </Grid>
+            ))}
           </Grid>
         </Box>
       </section>
