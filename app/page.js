@@ -64,9 +64,7 @@ export default function Home() {
           title="Nasa"
         />
         <h1>
-          NASA Image and
-          <br />
-          Video Library
+          NASA Images
         </h1>
       </header>
       <section>
